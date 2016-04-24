@@ -67,12 +67,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientProcessors\ClientBase.cs" />
+    <Compile Include="ClientServices\ChatServiceClient.cs" />
+    <Compile Include="ClientProcessors\ClientChatProcessor.cs" />
+    <Compile Include="ClientProcessors\ClientInputProcessor.cs" />
+    <Compile Include="ClientProcessors\ClientLoginProcessor.cs" />
+    <Compile Include="ClientServices\LoginServiceClient.cs" />
+    <Compile Include="ClientProcessors\MessageRequestProcessor.cs" />
+    <Compile Include="ClientServices\MessageServiceClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ChatApp.Client.laconf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ChatApp.Contracts\ChatApp.Contracts.csproj">
+      <Project>{a3877c1a-4785-4c45-83ff-8ddc96420287}</Project>
+      <Name>ChatApp.Contracts</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

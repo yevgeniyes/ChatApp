@@ -1,0 +1,32 @@
+﻿application
+{
+    glue
+    {   
+        bindings
+        {
+            binding
+            {
+                name="sync"
+                type="NFX.Glue.Native.SyncBinding, NFX"
+				server-transport
+				{
+					rcv-buf-size=131072
+					snd-buf-size=131072
+					rcv-timeout=15000
+					snd-timeout=15000
+				}
+            }
+        }
+        
+        servers
+        {
+            server
+            {
+                node="sync://localhost:8080"
+                contract-servers=$"ChatApp.Server.Services.LoginService, ChatApp.Server;
+									ChatApp.Server.Services.ChatService, ChatApp.Server;
+									ChatApp.Server.Services.MessageRequestService, ChatApp.Server"
+            }
+        }
+    }	
+}

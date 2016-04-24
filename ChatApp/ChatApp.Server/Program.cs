@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NFX.ApplicationModel;
+using NFX;
 
 namespace ChatApp.Server
 {
@@ -10,15 +8,22 @@ namespace ChatApp.Server
     {
         static void Main(string[] args)
         {
-            var token = new TokenGenerator();
-
-            Random random = new Random();
-
-            for (int i = 0; i <= 20; i++)
+            try
             {
-                Console.WriteLine(token.GetToken(random));
+                using (var application = new ServiceBaseApplication(args, null))
+                {
+                    Console.WriteLine("ChatApp Server 1.0\n\nserver is running...\n");
+                    foreach (var server in App.Glue.Servers)
+                        Console.WriteLine(server);
+                    Console.ReadLine();
+                }
             }
-            Console.ReadKey();
+            catch (Exception ex)
+            {
+                Console.WriteLine("error:");
+                Console.WriteLine(ex.ToString());
+                Console.ReadKey();
+            }
         }
     }
 }
