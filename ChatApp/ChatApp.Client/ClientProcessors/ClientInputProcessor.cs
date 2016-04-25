@@ -10,17 +10,17 @@ namespace ChatApp.Client
     {
         public string ReadLoginInput()
         {
-            Console.WriteLine("Enter the name:");
+            Console.Write("Enter your name: ");
 
             string input = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(input))
             {
-                Console.WriteLine("Error");
+                Console.WriteLine(Messages.LOGIN_ERROR);
                 return null;
             }
             if (input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Length > 1)
             {
-                Console.WriteLine("Error");
+                Console.WriteLine(Messages.LOGIN_ERROR);
                 return null;
             }
             return input;
@@ -28,11 +28,11 @@ namespace ChatApp.Client
 
         public string ReadMessageInput(string name)
         {
-            Console.Write(name + ": ");
             string input = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(input))
             {
-                Console.WriteLine("Error");
+                Console.WriteLine(Messages.EMPTY_STRING);
+                Console.Write(name + ": ");
                 return null;
             }
             return input;

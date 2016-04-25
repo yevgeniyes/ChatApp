@@ -9,21 +9,21 @@ using ChatApp.Client.ClientServices;
 
 namespace ChatApp.Client
 {
-    class ClientChatProcessor
+    class ClientChatProcessor : ClientBase
     {
         [Config("$test-service-node")]
         private string m_TestServiceNode;
 
         public ClientChatProcessor()
         {
-            Console.WriteLine("CHAT INTRO TEXT\n");
+            Console.WriteLine(Messages.CHAT_HEADER);
+            Console.Write(_clientName + ": ");
             ConfigAttribute.Apply(this, App.ConfigRoot);
         }
 
 
-        public void StartChat(string name, Guid token)
+        public void StartChat(Guid token)
         {
-            //запуск фонового потока здесь
             MessageRequestProcessor backgrounRequst = new MessageRequestProcessor();
             Thread backgroundThread = new Thread(backgrounRequst.Start);
             backgroundThread.Start();
@@ -31,19 +31,17 @@ namespace ChatApp.Client
             while (true)
             {
                 ClientInputProcessor inputProc = new ClientInputProcessor();
-                string message = inputProc.ReadMessageInput(name);
+                string message = inputProc.ReadMessageInput(_clientName);
+                if (message == null) continue;
 
                 try
                 {
                     using (var client = new ChatServiceClient(m_TestServiceNode))
                     {
-                        if (client.PutMessage(token, message))
+                        if (!client.PutMessage(token, message))
                         {
-                            //_clientChatSession.Add(name + ": " + message);
-                        }
-                        else
-                        {
-                            Console.WriteLine("\nCurrent session was lost. Re-login to continue\n");
+                            Console.WriteLine(Messages.SESSION_LOST);
+                            backgroundThread.Abort();
                             ClientLoginProcessor login = new ClientLoginProcessor();
                             login.Run();
                         }

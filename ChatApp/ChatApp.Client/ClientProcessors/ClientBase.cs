@@ -8,6 +8,7 @@ namespace ChatApp.Client
 {
     class ClientBase
     {
-        protected static List<string> _clientChatSession = new List<string>(); 
+        protected static List<string> _clientChatSession = new List<string>();
+        protected static string _clientName;
     }
 }

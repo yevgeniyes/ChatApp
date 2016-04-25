@@ -29,30 +29,32 @@ namespace ChatApp.Client
                 {
                     lastMessage = _clientChatSession.Last();
                 }
-                //try
-                //{
-                using (var client = new MessageServiceClient(m_TestServiceNode))
+                try
                 {
-
-
-                    List<string> newMessages = client.RequestMessages(lastMessage);
-                    if (newMessages.Any<string>())
+                    using (var client = new MessageServiceClient(m_TestServiceNode))
                     {
-                        _clientChatSession.AddRange(newMessages);
-
-                        foreach (string newMessage in newMessages)
+                        List<string> newMessages = client.RequestMessages(lastMessage);
+                        if (newMessages.Any<string>())
                         {
-                            Console.WriteLine(newMessage);
+                            _clientChatSession.AddRange(newMessages);
+
+                            Console.Clear();
+                            Console.WriteLine(Messages.CHAT_HEADER);
+
+                            foreach (string message in _clientChatSession)
+                            {
+                                Console.WriteLine(message);
+                            }
+                            Console.Write(_clientName + ": ");
                         }
                     }
                 }
-                //}
-                //catch (Exception error)
-                //{
-                //    Console.Write("\nServer error: ");
-                //    Console.WriteLine(error.Message + "\n");
-                //}
-                Thread.Sleep(2000);
+                catch (Exception error)
+                {
+                    Console.Write("\nServer error: ");
+                    Console.WriteLine(error.Message + "\n");
+                }
+                Thread.Sleep(1000);
             }
         }
     }

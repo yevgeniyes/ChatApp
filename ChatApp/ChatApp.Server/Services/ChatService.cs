@@ -15,7 +15,7 @@ namespace ChatApp.Server.Services
             _onlineUsers.TryGetValue(token, out name);
             if (name != null)
             {
-                _serverChatSession.Add(name + " (" + DateTime.Now + "): " + message);
+                _serverChatSession.Add(name + ": " + message + " (" + DateTime.Now.ToLongTimeString() + ")");
                 return true;
             }
             return false;

@@ -12,22 +12,12 @@ namespace ChatApp.Client
 
         public ClientLoginProcessor()
         {
-            Console.WriteLine("INTRO TEXT\n");
+            Console.WriteLine(Messages.WELCOME_TEXT);
             ConfigAttribute.Apply(this, App.ConfigRoot);
         }
 
         public void Run()
         {
-            //try остановить поток
-            try
-            {
-                //th.Abort();
-            }
-            catch
-            {
-
-            }
-
             while (true)
             {
                 ClientInputProcessor inputProc = new ClientInputProcessor();
@@ -35,25 +25,27 @@ namespace ChatApp.Client
 
                 if (name == null) continue;
 
-                //try
-                //{
+                try
+                {
                     using (var client = new LoginServiceClient(m_TestServiceNode))
                     {
                         var token = client.Login(name);
                         if (token != Guid.Empty)
                         {
-                            Console.WriteLine("Login successful");
+                            Console.WriteLine("\nLogin successful\n");
+                            _clientName = name;
+                            Console.Clear();
                             ClientChatProcessor chat = new ClientChatProcessor();
-                            chat.StartChat(name, token);
+                            chat.StartChat(token);
                         }
-                        else Console.WriteLine("Login error");
+                        else Console.WriteLine(Messages.LOGIN_ERROR);
                     }
-                //}
-                //catch (Exception error)
-                //{
-                //    Console.Write("\nServer error: ");
-                //    Console.WriteLine(error.Message + "\n");
-                //}
+                }
+                catch (Exception error)
+                {
+                    Console.Write("\nServer error: ");
+                    Console.WriteLine(error.Message + "\n");
+                }
             }
         }
     }

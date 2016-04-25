@@ -16,9 +16,15 @@ namespace ChatApp.Server.Services
             if (lastMessage != null)
             {
                 var index = _serverChatSession.IndexOf(lastMessage);
-                var lastIndex = _serverChatSession.IndexOf(_serverChatSession.Last());
-                newMesseges = _serverChatSession.GetRange(index, lastIndex);
+                var count = _serverChatSession.Count;
+                if (count - index > 1)
+                {
+                    for (int i = index + 1; i < count; i++)
+                    {
+                        newMesseges.Add(_serverChatSession[i]);
+                    }
 
+                }
                 return newMesseges;
             }
             else
