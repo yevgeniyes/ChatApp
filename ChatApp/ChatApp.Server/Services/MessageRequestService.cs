@@ -15,7 +15,7 @@ namespace ChatApp.Server.Services
 
             if (lastMessage != null)
             {
-                var index = _serverChatSession.IndexOf(lastMessage);
+                var index = _serverChatSession.LastIndexOf(lastMessage);
                 var count = _serverChatSession.Count;
                 if (count - index > 1)
                 {
