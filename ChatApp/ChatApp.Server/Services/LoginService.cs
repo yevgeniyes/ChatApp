@@ -7,22 +7,22 @@ using ChatApp.Contracts.Services;
 
 namespace ChatApp.Server.Services
 {
-    class LoginService : ServerBase, ILoginService
+    class LoginService : ILoginService
     {
         public Guid Login(string name)
         {
-            foreach (string user in _registredUsers)
+            foreach (string user in ServerContext._registredUsers)
             {
                 if(name == user)
                 {
-                    ICollection<string> onlineUsers = _onlineUsers.Values;
+                    ICollection<string> onlineUsers = ServerContext._onlineUsers.Values;
                     foreach (string onlineUser in onlineUsers)
                     {
                         if (name == onlineUser)
                             return Guid.Empty;
                     }
                     var token = Guid.NewGuid();
-                    _onlineUsers.Add(token, name);
+                    ServerContext._onlineUsers.Add(token, name);
                     return token;
                 }
             }

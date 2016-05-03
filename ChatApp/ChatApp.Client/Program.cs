@@ -10,16 +10,16 @@ namespace ChatApp.Client
         {
             using (var application = new ServiceBaseApplication(args, null))
             {
-                //try
-                //{
+                try
+                {
                     var clientLogin = new ClientLoginProcessor();
                     clientLogin.Run();
-                //}
-                //catch
-                //{
-                //    Console.WriteLine("CRITICAL ERROR");
-                //    Console.ReadKey();
-                //}
+                }
+                catch
+                {
+                    Console.WriteLine("CRITICAL ERROR");
+                    Console.ReadKey();
+                }
             }
         }
     }

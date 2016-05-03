@@ -4,35 +4,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ChatApp.Contracts.Services;
+using ChatApp.Contracts;
 
 namespace ChatApp.Server.Services
 {
-    class MessageRequestService : ServerBase, IMessageRequestService
+    class MessageRequestService : IMessageRequestService
     {
-        public List<string> RequestMessages(string lastMessage)
+        public List<Message> RequestMessages(Guid token, int lastMessageId)
         {
-            List<string> newMesseges = new List<string>();
+            List<Message> newMesseges = new List<Message>();
+            string name;
+            ServerContext._onlineUsers.TryGetValue(token, out name);
+            if (name == null) return null;
 
-            if (lastMessage != null)
+            var count = ServerContext._serverChatSession.Count;
+            if (lastMessageId != 0)
             {
-                var index = _serverChatSession.LastIndexOf(lastMessage);
-                var count = _serverChatSession.Count;
-                if (count - index > 1)
+                for (int i = 0; i < count; i++)
                 {
-                    for (int i = index + 1; i < count; i++)
-                    {
-                        newMesseges.Add(_serverChatSession[i]);
-                    }
-
+                    if (ServerContext._serverChatSession[i].id > lastMessageId)
+                        newMesseges.Add(ServerContext._serverChatSession[i]);
                 }
                 return newMesseges;
             }
             else
             {
-                if (_serverChatSession.Any<string>())
+                if (ServerContext._serverChatSession.Any<Message>())
                 {
-                    string message = _serverChatSession.Last();
-                    newMesseges.Add(message);
+                    for (int i = 0; i < count; i++)
+                    {
+                        newMesseges.Add(ServerContext._serverChatSession[i]);
+                    }
                 }
                 return newMesseges;
             }

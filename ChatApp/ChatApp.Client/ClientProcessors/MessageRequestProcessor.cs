@@ -3,16 +3,16 @@ using NFX.Environment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using ChatApp.Client.ClientServices;
+using ChatApp.Contracts;
 
 namespace ChatApp.Client
 {
-    class MessageRequestProcessor : ClientBase
+    class MessageRequestProcessor
     {
         [Config("$test-service-node")]
-        private string m_TestServiceNode;
+        private string m_ChatServiceNode;
 
         public MessageRequestProcessor()
         {
@@ -21,31 +21,52 @@ namespace ChatApp.Client
 
         public void Start()
         {
-            string lastMessage = null;
+            int lastMessageId = 0;
 
             while (true)
             {
-                if (_clientChatSession.Any<string>())
+                if (ClientContext._clientChatSession.Any<Message>())
                 {
-                    lastMessage = _clientChatSession.Last();
+                    lastMessageId = ClientContext._clientChatSession.Last().id;
                 }
                 try
                 {
-                    using (var client = new MessageServiceClient(m_TestServiceNode))
+                    using (var client = new MessageServiceClient(m_ChatServiceNode))
                     {
-                        List<string> newMessages = client.RequestMessages(lastMessage);
-                        if (newMessages.Any<string>())
+                        List<Message> newMessages = client.RequestMessages(ClientContext._token, lastMessageId);
+
+                        if (newMessages == null)
                         {
-                            _clientChatSession.AddRange(newMessages);
+                            //Console.WriteLine(UIMessages.SESSION_LOST);
+                            //ClientLoginProcessor login = new ClientLoginProcessor();
+                            //login.Run();
+                            //Thread.CurrentThread.Abort();
+                            break;
+                        }
 
-                            Console.Clear();
-                            Console.WriteLine(Messages.CHAT_HEADER);
+                        if (newMessages.Any<Message>())
+                        {
+                            ClientContext._clientChatSession.AddRange(newMessages);
 
-                            foreach (string message in _clientChatSession)
+                            var buffer = 0;
+                            for (int i = 0; i < newMessages.Count; i++)
                             {
-                                Console.WriteLine(message);
+                                Message message = newMessages[i];
+                                var name = message.name;
+                                var time = message.time.ToShortTimeString();
+                                var content = message.content;
+
+                                if (message.name != ClientContext._clientName)
+                                {
+                                    Console.MoveBufferArea(0, Console.CursorTop, Console.BufferWidth, 1, 0, Console.CursorTop + 1);
+                                    buffer = Console.CursorLeft;
+                                }
+
+                                Console.CursorLeft = 0;
+                                Console.WriteLine(name + ": " + content + " (" + time + ")");
+
                             }
-                            Console.Write(_clientName + ": ");
+                            Console.CursorLeft = buffer;
                         }
                     }
                 }

@@ -3,6 +3,7 @@ using NFX.Glue;
 using NFX.Glue.Protocol;
 using ChatApp.Contracts.Services;
 using System.Collections.Generic;
+using ChatApp.Contracts;
 
 namespace ChatApp.Client.ClientServices
 {
@@ -15,7 +16,7 @@ namespace ChatApp.Client.ClientServices
         {
             var t = typeof(IMessageRequestService);
             s_ts_CONTRACT = new TypeSpec(t);
-            s_ms_RequestMessages_0 = new MethodSpec(t.GetMethod("RequestMessages", new Type[] { typeof(string) }));
+            s_ms_RequestMessages_0 = new MethodSpec(t.GetMethod("RequestMessages", new Type[] { typeof(Guid), typeof(int) }));
         }
 
         public MessageServiceClient(string node, Binding binding = null) : base(node, binding) { ctor(); }
@@ -33,15 +34,15 @@ namespace ChatApp.Client.ClientServices
             get { return typeof(IMessageRequestService); }
         }
 
-        public List<string> RequestMessages(string lastMessage)
+        public List<Message> RequestMessages(Guid token, int lastMessageId)
         {
-            var call = Async_RequestMessages(lastMessage);
-            return call.GetValue<List<string>>();
+            var call = Async_RequestMessages(token, lastMessageId);
+            return call.GetValue<List<Message>>();
         }
 
-        public CallSlot Async_RequestMessages(string lastMessage)
+        public CallSlot Async_RequestMessages(Guid token, int lastMessageId)
         {
-            var request = new RequestAnyMsg(s_ts_CONTRACT, s_ms_RequestMessages_0, false, RemoteInstance, new object[] { lastMessage });
+            var request = new RequestAnyMsg(s_ts_CONTRACT, s_ms_RequestMessages_0, false, RemoteInstance, new object[] { token, lastMessageId });
             return DispatchCall(request);
         }
     }

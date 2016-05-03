@@ -7,6 +7,6 @@ namespace ChatApp.Contracts.Services
     [Glued]
     public interface IMessageRequestService
     {
-        List<string> RequestMessages(string lastMessage); 
+        List<Message> RequestMessages(Guid token, int lastMessageId); 
     }
 }

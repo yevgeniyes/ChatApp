@@ -67,8 +67,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientProcessors\ClientBase.cs" />
-    <Compile Include="ClientProcessors\Messages.cs" />
+    <Compile Include="ClientProcessors\ClientContext.cs" />
+    <Compile Include="ClientProcessors\UIMessages.cs" />
     <Compile Include="ClientServices\ChatServiceClient.cs" />
     <Compile Include="ClientProcessors\ClientChatProcessor.cs" />
     <Compile Include="ClientProcessors\ClientInputProcessor.cs" />
@@ -76,6 +76,7 @@
     <Compile Include="ClientServices\LoginServiceClient.cs" />
     <Compile Include="ClientProcessors\MessageRequestProcessor.cs" />
     <Compile Include="ClientServices\MessageServiceClient.cs" />
+    <Compile Include="ClientServices\RegistrationServiceClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -90,6 +91,10 @@
     <ProjectReference Include="..\ChatApp.Contracts\ChatApp.Contracts.csproj">
       <Project>{a3877c1a-4785-4c45-83ff-8ddc96420287}</Project>
       <Name>ChatApp.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ChatApp.Server\ChatApp.Server.csproj">
+      <Project>{d887d338-5746-423c-9c39-04840e02bd39}</Project>
+      <Name>ChatApp.Server</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

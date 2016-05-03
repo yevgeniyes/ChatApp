@@ -25,7 +25,8 @@
                 node="sync://localhost:8080"
                 contract-servers=$"ChatApp.Server.Services.LoginService, ChatApp.Server;
 									ChatApp.Server.Services.ChatService, ChatApp.Server;
-									ChatApp.Server.Services.MessageRequestService, ChatApp.Server"
+									ChatApp.Server.Services.MessageRequestService, ChatApp.Server;
+									ChatApp.Server.Services.RegistrationService, ChatApp.Server"
             }
         }
     }	
