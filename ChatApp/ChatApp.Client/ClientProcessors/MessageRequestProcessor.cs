@@ -17,6 +17,7 @@ namespace ChatApp.Client
         public MessageRequestProcessor()
         {
             ConfigAttribute.Apply(this, App.ConfigRoot);
+            new Thread(Start) { IsBackground = true }.Start();
         }
 
         public void Start()
@@ -37,11 +38,7 @@ namespace ChatApp.Client
 
                         if (newMessages == null)
                         {
-                            //Console.WriteLine(UIMessages.SESSION_LOST);
-                            //ClientLoginProcessor login = new ClientLoginProcessor();
-                            //login.Run();
-                            //Thread.CurrentThread.Abort();
-                            break;
+                            return;
                         }
 
                         if (newMessages.Any<Message>())

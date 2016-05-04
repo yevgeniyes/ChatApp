@@ -17,12 +17,17 @@ namespace ChatApp.Server.Services
             if (name != null)
             {
                 Message newMessage = new Message();
-                newMessage.id = ServerContext._serverChatSession.Count + 1;
+
+                newMessage.id = Properties.Settings.Default.serverLastMessageID + 1;
                 newMessage.name = name;
                 newMessage.time = DateTime.Now;
                 newMessage.content = message;
-
                 ServerContext._serverChatSession.Add(newMessage);
+
+                //saving last message ID in settings
+                Properties.Settings.Default.serverLastMessageID = newMessage.id;
+                Properties.Settings.Default.Save();
+
                 return true;
             }
             return false;

@@ -13,6 +13,7 @@ namespace ChatApp.Server.Services
         public List<Message> RequestMessages(Guid token, int lastMessageId)
         {
             List<Message> newMesseges = new List<Message>();
+
             string name;
             ServerContext._onlineUsers.TryGetValue(token, out name);
             if (name == null) return null;

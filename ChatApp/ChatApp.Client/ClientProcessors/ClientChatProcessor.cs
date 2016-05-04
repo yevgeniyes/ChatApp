@@ -35,9 +35,7 @@ namespace ChatApp.Client
 
         public void StartChat()
         {
-            MessageRequestProcessor backgrounRequst = new MessageRequestProcessor();
-            Thread backgroundThread = new Thread(backgrounRequst.Start);
-            backgroundThread.Start();
+            MessageRequestProcessor backgroundRequest = new MessageRequestProcessor();
 
             while (true)
             {
@@ -51,8 +49,9 @@ namespace ChatApp.Client
                     {
                         if (!client.PutMessage(ClientContext._token, message))
                         {
+                            Console.Clear();
                             Console.WriteLine(UIMessages.SESSION_LOST);
-                            backgroundThread.Abort();
+                            Console.WriteLine("Last logged user is '" + ClientContext._clientName + "'" + Environment.NewLine);
                             ClientLoginProcessor login = new ClientLoginProcessor();
                             login.Run();
                         }
