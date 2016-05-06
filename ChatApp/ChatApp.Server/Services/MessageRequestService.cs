@@ -10,34 +10,19 @@ namespace ChatApp.Server.Services
 {
     class MessageRequestService : IMessageRequestService
     {
+        private object threadLock = new object();
+
         public List<Message> RequestMessages(Guid token, int lastMessageId)
         {
-            List<Message> newMesseges = new List<Message>();
-
-            string name;
-            ServerContext._onlineUsers.TryGetValue(token, out name);
-            if (name == null) return null;
-
-            var count = ServerContext._serverChatSession.Count;
-            if (lastMessageId != 0)
+            lock (threadLock)
             {
-                for (int i = 0; i < count; i++)
+                AuthenticationProcessor auth = new AuthenticationProcessor();
+                if (auth.ValidateNameByToken(token) != null)
                 {
-                    if (ServerContext._serverChatSession[i].id > lastMessageId)
-                        newMesseges.Add(ServerContext._serverChatSession[i]);
+                    var newMesseges = ServerContext.ChatSession.Where(m => m.Id > lastMessageId).ToList<Message>();
+                    return newMesseges;
                 }
-                return newMesseges;
-            }
-            else
-            {
-                if (ServerContext._serverChatSession.Any<Message>())
-                {
-                    for (int i = 0; i < count; i++)
-                    {
-                        newMesseges.Add(ServerContext._serverChatSession[i]);
-                    }
-                }
-                return newMesseges;
+                else return null;
             }
         }
     }

@@ -9,24 +9,29 @@ namespace ChatApp.Server.Services
 {
     class LoginService : ILoginService
     {
+        private object threadLock = new object();
+
         public Guid Login(string name)
         {
-            foreach (string user in ServerContext._registredUsers)
+            lock (threadLock)
             {
-                if(name == user)
+                foreach (string user in ServerContext.RegistredUsers)
                 {
-                    ICollection<string> onlineUsers = ServerContext._onlineUsers.Values;
-                    foreach (string onlineUser in onlineUsers)
+                    if (name == user)
                     {
-                        if (name == onlineUser)
-                            return Guid.Empty;
+                        ICollection<string> onlineUsers = ServerContext.OnlineUsers.Values;
+                        foreach (string onlineUser in onlineUsers)
+                        {
+                            if (name == onlineUser)
+                                return Guid.Empty;
+                        }
+                        var token = Guid.NewGuid();
+                        ServerContext.OnlineUsers.Add(token, name);
+                        return token;
                     }
-                    var token = Guid.NewGuid();
-                    ServerContext._onlineUsers.Add(token, name);
-                    return token;
                 }
+                return Guid.Empty;
             }
-            return Guid.Empty;
         }
     }
 }

@@ -26,42 +26,36 @@ namespace ChatApp.Client
 
             while (true)
             {
-                if (ClientContext._clientChatSession.Any<Message>())
+                if (ClientContext.ChatSession.Any<Message>())
                 {
-                    lastMessageId = ClientContext._clientChatSession.Last().id;
+                    lastMessageId = ClientContext.ChatSession.Last().Id;
                 }
                 try
                 {
                     using (var client = new MessageServiceClient(m_ChatServiceNode))
                     {
-                        List<Message> newMessages = client.RequestMessages(ClientContext._token, lastMessageId);
+                        List<Message> newMessages = client.RequestMessages(ClientContext.Token, lastMessageId);
 
-                        if (newMessages == null)
-                        {
-                            return;
-                        }
-
+                        if (newMessages == null) return;
                         if (newMessages.Any<Message>())
                         {
-                            ClientContext._clientChatSession.AddRange(newMessages);
+                            ClientContext.ChatSession.AddRange(newMessages);
 
                             var buffer = 0;
-                            for (int i = 0; i < newMessages.Count; i++)
+                            foreach (Message message in newMessages)
                             {
-                                Message message = newMessages[i];
-                                var name = message.name;
-                                var time = message.time.ToShortTimeString();
-                                var content = message.content;
+                                var name = message.Name;
+                                var time = message.Time.ToShortTimeString();
+                                var content = message.Content;
 
-                                if (message.name != ClientContext._clientName)
+                                if (message.Name != ClientContext.Name)
                                 {
                                     Console.MoveBufferArea(0, Console.CursorTop, Console.BufferWidth, 1, 0, Console.CursorTop + 1);
                                     buffer = Console.CursorLeft;
                                 }
 
                                 Console.CursorLeft = 0;
-                                Console.WriteLine(name + ": " + content + " (" + time + ")");
-
+                                Console.WriteLine("{0}: {1} ({2})", name, content, time);
                             }
                             Console.CursorLeft = buffer;
                         }

@@ -22,17 +22,5 @@ namespace ChatApp.Server.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int serverLastMessageID {
-            get {
-                return ((int)(this["serverLastMessageID"]));
-            }
-            set {
-                this["serverLastMessageID"] = value;
-            }
-        }
     }
 }

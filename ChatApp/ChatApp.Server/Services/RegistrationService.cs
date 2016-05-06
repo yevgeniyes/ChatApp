@@ -4,18 +4,20 @@ namespace ChatApp.Server.Services
 {
     class RegistrationService : IRegistrationService
     {
+        private object threadLock = new object();
+
         public bool Register(string userName)
         {
-            for (int i = 0; i < ServerContext._registredUsers.Count; i++)
+            lock (threadLock)
             {
-                var registredUser = ServerContext._registredUsers[i];
-                if (userName == registredUser)
+                var registred = ServerContext.RegistredUsers.Contains(userName);
+                if (registred) return false;
+                else
                 {
-                    return false;
+                    ServerContext.RegistredUsers.Add(userName);
+                    return true;
                 }
             }
-            ServerContext._registredUsers.Add(userName);
-            return true;
         }
     }
 }

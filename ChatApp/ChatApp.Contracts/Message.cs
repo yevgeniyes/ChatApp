@@ -8,9 +8,9 @@ namespace ChatApp.Contracts
 {
     public class Message
     {
-        public int id;
-        public string name;
-        public DateTime time;
-        public string content;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime Time { get; set; }
+        public string Content { get; set; }
     }
 }

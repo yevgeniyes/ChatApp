@@ -10,27 +10,26 @@ namespace ChatApp.Server.Services
 {
     class ChatService : IChatService
     {
+        private object threadLock = new object();
+
         public bool PutMessage(Guid token, string message)
         {
-            string name;
-            ServerContext._onlineUsers.TryGetValue(token, out name);
-            if (name != null)
+            lock (threadLock)
             {
-                Message newMessage = new Message();
-
-                newMessage.id = Properties.Settings.Default.serverLastMessageID + 1;
-                newMessage.name = name;
-                newMessage.time = DateTime.Now;
-                newMessage.content = message;
-                ServerContext._serverChatSession.Add(newMessage);
-
-                //saving last message ID in settings
-                Properties.Settings.Default.serverLastMessageID = newMessage.id;
-                Properties.Settings.Default.Save();
-
-                return true;
+                AuthenticationProcessor auth = new AuthenticationProcessor();
+                var name = auth.ValidateNameByToken(token);
+                if (name != null)
+                {
+                    Message newMessage = new Message();
+                    newMessage.Id = ServerContext.ChatSession.Count + 1;
+                    newMessage.Name = name;
+                    newMessage.Time = DateTime.Now;
+                    newMessage.Content = message;
+                    ServerContext.ChatSession.Add(newMessage);
+                    return true;
+                }
+                return false;
             }
-            return false;
         }
     }
 }
